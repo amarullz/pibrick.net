@@ -497,7 +497,7 @@ function renderModel(data) {
         <p>
           <a
             class="buy-guide-link"
-            href="https://github.com/amarullz/pibrick/wiki/Where-to-Buy-piBrick"
+            href="https://wiki.pibrick.net/Where-to-Buy-piBrick"
             target="_blank"
             rel="noopener"
           >

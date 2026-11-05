@@ -74,7 +74,7 @@
   ],
   "links": [
     {"group":"Community","title":"Discord Community","description":"Ask questions, share builds and follow piBrick updates.","url":"https://discord.gg/e9qUdJ4aVr","icon":"discord"},
-    {"group":"Documentation","title":"piBrick Wiki","description":"Getting started, parts, guides and troubleshooting.","url":"https://github.com/amarullz/pibrick/wiki","icon":"menu_book"},
+    {"group":"Documentation","title":"piBrick Wiki","description":"Getting started, parts, guides and troubleshooting.","url":"https://wiki.pibrick.net","icon":"menu_book"},
     {"group":"Tools","title":"piBrick Serial Shell","description":"Web-based serial console for piBrick debugging.","url":"https://serial.amarullz.com/","icon":"terminal"},
 
     {"group":"Repository","title":"piBrick Repository","description":"Main project source and documentation.","url":"https://github.com/amarullz/pibrick","icon":"github"},
