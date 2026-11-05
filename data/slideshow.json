@@ -1,0 +1,48 @@
+[
+  {
+    "eyebrow": "Open hardware · Raspberry Pi CM5",
+    "title": "Open hardware.",
+    "highlight": "Pocket-sized Linux.",
+    "description": "A building block for handheld computing. An open-source handheld computer powered by Raspberry Pi Compute Module 5.",
+    "image": "assets/images/pocketcm5-hero.png",
+    "alt": "piBrick PocketCM5 handheld computer",
+    "actions": [
+      {
+        "label": "Explore piBrick",
+        "icon": "explore",
+        "url": "#models",
+        "style": "primary"
+      },
+      {
+        "label": "Buy / Build",
+        "icon": "shopping_bag",
+        "url": "#buy",
+        "style": "ghost"
+      }
+    ],
+    "meta": ["Open design", "Maker focused", "Linux ready"]
+  },
+  {
+    "eyebrow": "Build · Customize · Experiment",
+    "title": "Your hardware.",
+    "highlight": "Your imagination.",
+    "description": "Explore the open hardware design, customize your device, and build your own piBrick.",
+    "image": "assets/images/pibrick-photo-1.png",
+    "alt": "piBrick PocketCM5 open hardware device",
+    "actions": [
+      {
+        "label": "View Open Hardware",
+        "icon": "developer_board",
+        "url": "https://oshwlab.com/amarullz/pibrick-pocketcm5",
+        "style": "primary"
+      },
+      {
+        "label": "Join Community",
+        "icon": "forum",
+        "url": "https://discord.gg/e9qUdJ4aVr",
+        "style": "ghost"
+      }
+    ],
+    "meta": ["Open source", "DIY friendly", "Community driven"]
+  }
+]

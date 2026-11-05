@@ -1,0 +1,109 @@
+[
+  {
+    "id": "pocketcm5",
+    "name": "piBrick PocketCM5",
+    "shortName": "PocketCM5",
+    "status": "Available",
+    "eyebrow": "Handheld Linux computer",
+    "hero": "assets/images/pocketcm5-hero.png",
+    "cardImage": "assets/images/pibrick-photo-3.jpg",
+    "summary": "A compact Raspberry Pi CM5 handheld with AMOLED display, physical QWERTY keyboard, NVMe storage and a maker-friendly expansion design.",
+    "highlights": [
+      "Raspberry Pi Compute Module 5",
+      "3.92″ AMOLED · 1080×1240 · 90 Hz",
+      "Physical QWERTY + trackpad",
+      "M.2 NVMe 2230 / 2242",
+      "USB-C charging and external I/O",
+      "Open hardware and open-source software"
+    ],
+    "specs": [
+      ["Compute", "Raspberry Pi Compute Module 5"],
+      ["Display", "3.92″ AMOLED, 1080×1240, 90 Hz, up to 500 nits"],
+      ["Touch", "On-cell capacitive multitouch, up to 5 points"],
+      ["Keyboard", "Physical QWERTY BBQ20 keyboard with integrated trackpad"],
+      ["Storage", "M.2 NVMe 2230 / 2242 + microSD (CM5 Lite configuration)"],
+      ["Battery", "5000 mAh LiPo recommended; battery not included"],
+      ["USB", "USB 3 Type-C, USB 3 Type-A, USB 2 Type-A, external USB-C"],
+      ["Video", "Full-size HDMI + Micro HDMI"],
+      ["Audio", "3.5 mm audio, stereo speakers, USB audio"],
+      [
+        "Expansion",
+        "GPIO / I²C, camera connector, auxiliary RP2040 controller"
+      ],
+      ["Size", "Approx. 80 × 145 × 20 mm assembled"],
+      ["PCB", "Approx. 75 × 140 mm mainboard"]
+    ],
+    "gallery": [
+      {
+        "src": "assets/images/pocketcm5-hero.png",
+        "alt": "piBrick PocketCM5 hero view",
+        "label": "PocketCM5"
+      },
+      {
+        "src": "assets/images/pibrick-photo-1.png",
+        "alt": "piBrick PocketCM5 in handheld use",
+        "label": "Handheld"
+      },
+      {
+        "src": "assets/images/pibrick-photo-2.jpg",
+        "alt": "piBrick PocketCM5 showing Linux console",
+        "label": "Linux console"
+      },
+      {
+        "src": "assets/images/pibrick-photo-3.jpg",
+        "alt": "piBrick PocketCM5 on a desk",
+        "label": "Desktop view"
+      },
+      {
+        "src": "assets/images/pibrick-clear.jpg",
+        "alt": "piBrick PocketCM5 clear case",
+        "label": "Clear case"
+      },
+      {
+        "src": "assets/images/mainboard-map.png",
+        "alt": "piBrick PocketCM5 mainboard connector map",
+        "label": "Mainboard map"
+      }
+    ],
+    "buy": {
+      "preorder": {
+        "title": "Preorder",
+        "price": "Reserve & Customize",
+        "note": "Secure your spot in the next batch and customize your piBrick parts to suit your needs.",
+        "url": "https://preorder.amarullz.com/",
+        "icon": "event_available",
+        "opentitle": "Reserve now"
+      },
+      "direct": {
+        "title": "Buy on Tindie",
+        "price": "Direct Purchase",
+        "note": "Ready-to-use, fully assembled units available in limited small batches.",
+        "url": "https://www.tindie.com/stores/amarullz/",
+        "icon": "shopping_bag",
+        "opentitle": "Start from $254"
+      },
+      "build": {
+        "title": "Manufacture Yourself",
+        "price": "Open Hardware",
+        "note": "Access the open hardware designs and manufacture your own piBrick.",
+        "url": "https://oshwlab.com/amarullz/pibrick-pocketcm5",
+        "icon": "precision_manufacturing",
+        "opentitle": "View on OSHWLab"
+      }
+    },
+    "videos": [
+      {
+        "title": "Clear Casing Demo",
+        "description": "A closer look at the piBrick PocketCM5 transparent casing.",
+        "url": "https://www.youtube.com/watch?v=TcVaFZuxn5k",
+        "thumbnail": "https://img.youtube.com/vi/TcVaFZuxn5k/maxresdefault.jpg"
+      },
+      {
+        "title": "Live Assembly",
+        "description": "Watch the piBrick PocketCM5 assembly process.",
+        "url": "https://www.youtube.com/watch?v=-haFFYMq1-w",
+        "thumbnail": "https://img.youtube.com/vi/-haFFYMq1-w/maxresdefault.jpg"
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "welcome-to-pibrick",
+    "title": "Welcome to piBrick",
+    "date": "2026-10-29",
+    "category": "Announcement",
+    "excerpt": "Why piBrick exists, what is open, and where to start.",
+    "cover": "pibrick-photo-3.jpg",
+    "file": "welcome-to-pibrick"
+  },
+  {
+    "id": "pibrick-serial-shell",
+    "title": "piBrick Serial Shell",
+    "date": "2026-10-29",
+    "category": "Tools",
+    "excerpt": "A web-based serial console for accessing piBrick through its built-in USB serial path.",
+    "cover": "pibrick-photo-2.jpg",
+    "file": "pibrick-serial-shell"
+  }
+]
