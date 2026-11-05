@@ -6,7 +6,7 @@ It is useful when the display is unavailable, when debugging boot messages, or w
 
 ## Open the shell
 
-Visit [serial.amarullz.com](https://serial.amarullz.com/) and connect the piBrick serial interface from a compatible browser.
+Visit [serial.pibrick.net](https://serial.pibrick.net/) and connect the piBrick serial interface from a compatible browser.
 
 The project source is available on [GitHub](https://github.com/amarullz/piBrick-Serial-Shell).
 
