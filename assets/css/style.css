@@ -595,6 +595,10 @@ h2 span,
 .site-footer a:hover {
   color: #fff;
 }
+.footer-bottom a{
+  display: inline-block;
+  font-size: 11px;
+}
 .footer-title {
   font-size: 11px;
   text-transform: uppercase;
