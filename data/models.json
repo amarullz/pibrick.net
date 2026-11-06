@@ -16,6 +16,7 @@
       "USB-C charging and external I/O",
       "Open hardware and open-source software"
     ],
+    "specsImage": "assets/images/mainboard-map.png",
     "specs": [
       ["Compute", "Raspberry Pi Compute Module 5"],
       ["Display", "3.92″ AMOLED, 1080×1240, 90 Hz, up to 500 nits"],
@@ -33,6 +34,32 @@
       ["Size", "Approx. 80 × 145 × 20 mm assembled"],
       ["PCB", "Approx. 75 × 140 mm mainboard"]
     ],
+    "buy": {
+      "preorder": {
+        "title": "Preorder",
+        "price": "Reserve & Customize",
+        "note": "Secure your spot in the next batch and customize your piBrick parts to suit your needs.",
+        "url": "https://order.pibrick.net/",
+        "icon": "event_available",
+        "opentitle": "Reserve now"
+      },
+      "direct": {
+        "title": "Buy on Tindie",
+        "price": "Direct Purchase",
+        "note": "Ready-to-use, fully assembled units available in limited small batches.",
+        "url": "https://www.tindie.com/stores/amarullz/",
+        "icon": "shopping_bag",
+        "opentitle": "Start from $254"
+      },
+      "build": {
+        "title": "Manufacture Yourself",
+        "price": "Open Hardware",
+        "note": "Access the open hardware designs and manufacture your own piBrick.",
+        "url": "https://oshwlab.com/amarullz/pibrick-pocketcm5",
+        "icon": "precision_manufacturing",
+        "opentitle": "View on OSHWLab"
+      }
+    },
     "gallery": [
       {
         "src": "assets/images/pocketcm5-hero.png",
@@ -65,32 +92,6 @@
         "label": "Mainboard map"
       }
     ],
-    "buy": {
-      "preorder": {
-        "title": "Preorder",
-        "price": "Reserve & Customize",
-        "note": "Secure your spot in the next batch and customize your piBrick parts to suit your needs.",
-        "url": "https://order.pibrick.net/",
-        "icon": "event_available",
-        "opentitle": "Reserve now"
-      },
-      "direct": {
-        "title": "Buy on Tindie",
-        "price": "Direct Purchase",
-        "note": "Ready-to-use, fully assembled units available in limited small batches.",
-        "url": "https://www.tindie.com/stores/amarullz/",
-        "icon": "shopping_bag",
-        "opentitle": "Start from $254"
-      },
-      "build": {
-        "title": "Manufacture Yourself",
-        "price": "Open Hardware",
-        "note": "Access the open hardware designs and manufacture your own piBrick.",
-        "url": "https://oshwlab.com/amarullz/pibrick-pocketcm5",
-        "icon": "precision_manufacturing",
-        "opentitle": "View on OSHWLab"
-      }
-    },
     "videos": [
       {
         "title": "Clear Casing Demo",
@@ -103,6 +104,28 @@
         "description": "Watch the piBrick PocketCM5 assembly process.",
         "url": "https://www.youtube.com/watch?v=-haFFYMq1-w",
         "thumbnail": "https://img.youtube.com/vi/-haFFYMq1-w/maxresdefault.jpg"
+      }
+    ],
+    "faq": [
+      {
+        "question": "What is included in the piBrick package?",
+        "answer": "The package includes the piBrick PocketCM5 hardware components. Raspberry Pi CM5, battery, and NVMe SSD are not included."
+      },
+      {
+        "question": "Which Raspberry Pi Compute Module is supported?",
+        "answer": "piBrick PocketCM5 is designed for Raspberry Pi Compute Module 5."
+      },
+      {
+        "question": "Can I install an NVMe SSD?",
+        "answer": "Yes. The mainboard supports M.2 NVMe SSDs in 2230 and 2242 sizes."
+      },
+      {
+        "question": "Does it include a battery?",
+        "answer": "No. The battery is not included. A 5000 mAh LiPo battery is recommended."
+      },
+      {
+        "question": "Can I install my own operating system?",
+        "answer": "Yes. piBrick is based on Raspberry Pi CM5 and supports compatible Raspberry Pi operating systems."
       }
     ]
   }

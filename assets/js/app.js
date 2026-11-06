@@ -291,7 +291,6 @@ function renderHome(data) {
   renderHomeShowcase(data);
 
   document.querySelectorAll('[data-bind="site.description"]').forEach(el => el.textContent = data.site.description);
-  document.getElementById('year').textContent = new Date().getFullYear();
 
   const models = document.getElementById('modelCards');
   models.innerHTML = data.models.map(model => `
@@ -339,8 +338,25 @@ function articleCard(a) {
   `;
 }
 
-function buyCards(buy) {
+function oldbuyCards(buy) {
   return Object.values(buy).map(item => `<div class="buy-card"><div class="icon">${icon(item.icon)}</div><h3>${esc(item.title)}</h3><div class="price">${esc(item.price)}</div><p>${esc(item.note)}</p><a href="${item.url}" target="_blank" rel="noopener">${item.opentitle} ${icon('arrow_outward')}</a></div>`).join('');
+}
+
+function buyCards(buy) {
+  return Object.values(buy).map(item => `
+    <a class="buy-card"
+       href="${esc(item.url)}"
+       target="_blank"
+       rel="noopener">
+      <div class="icon">${icon(item.icon)}</div>
+      <h3>${esc(item.title)}</h3>
+      <div class="price">${esc(item.price)}</div>
+      <p>${esc(item.note)}</p>
+      <span class="buy-card-link">
+        ${esc(item.opentitle)} ${icon('arrow_outward')}
+      </span>
+    </a>
+  `).join('');
 }
 
 function formatDate(value) { return new Intl.DateTimeFormat('en-US', {year:'numeric', month:'short', day:'numeric'}).format(new Date(`${value}T00:00:00`)); }
@@ -350,14 +366,14 @@ function renderModel(data) {
   const model = data.models.find(m => m.id === id);
   const root = document.getElementById('modelPage');
 
-  document.getElementById('year').textContent = new Date().getFullYear();
-
   if (!model) {
     root.innerHTML = `<section class="section-pad"><div class="container error">Model not found.</div></section>`;
     return;
   }
 
   document.title = `${model.name} — piBrick`;
+
+  const modelSplit = model.name.split(' ', 2);
 
   // Render model page
   root.innerHTML = `
@@ -368,7 +384,7 @@ function renderModel(data) {
             <span class="status-dot"></span>
             ${esc(model.status)} · ${esc(model.eyebrow)}
           </div>
-          <h1>${esc(model.name)}</h1>
+          <h1>${esc(modelSplit[0])}<br><em>${esc(modelSplit[1])}</em></h1>
           <p>${esc(model.summary)}</p>
           <div class="pill-row">
             ${model.highlights.map(x => `<span class="pill">${esc(x)}</span>`).join('')}
@@ -404,7 +420,7 @@ function renderModel(data) {
           </div>
 
           <div class="board-map">
-            <img src="assets/images/mainboard-map.png" alt="piBrick PocketCM5 mainboard map">
+            <img src="${model.specsImage}" alt="Specifications diagram for ${esc(model.name)}">
           </div>
         </div>
       </div>
@@ -482,6 +498,35 @@ function renderModel(data) {
     </section>
     ` : ''}
 
+    ${model.faq?.length ? `
+      <section class="section-pad" id="modelFaq">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="kicker">Need to know</div>
+              <h2>Questions & <span>answers.</span></h2>
+            </div>
+          </div>
+
+          <div class="questions-list">
+            ${model.faq.map((item, i) => `
+              <div class="faq">
+                <button type="button"
+                        aria-expanded="false"
+                        aria-controls="modelFaqAnswer${i}">
+                  <span>${esc(item.question)}</span>
+                  <span class="icon">${icon('add')}</span>
+                </button>
+                <div class="faq-answer" id="modelFaqAnswer${i}">
+                  ${esc(item.answer)}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+    ` : ''}
+
     <section class="section-pad" id="modelBuy">
       <div class="container">
         <div class="section-head">
@@ -509,6 +554,15 @@ function renderModel(data) {
       </div>
     </section>
   `;
+
+  // Model Q&A accordion
+  root.querySelectorAll('#modelFaq .faq > button').forEach(button => {
+    button.addEventListener('click', () => {
+      const faq = button.closest('.faq');
+      const isOpen = faq.classList.toggle('open');
+      button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
 
   // Gallery image popup
   const photoItems = [...root.querySelectorAll('.gallery-item')];
@@ -689,12 +743,10 @@ function openLightbox(items, index) {
 }
 
 async function renderArticles(data) {
-  document.getElementById('year').textContent = new Date().getFullYear();
   document.getElementById('allArticles').innerHTML = data.articles.map(articleCard).join('');
 }
 
 async function renderArticle(data) {
-  document.getElementById('year').textContent = new Date().getFullYear();
 
   const id = new URLSearchParams(location.search).get('id');
   const item = data.articles.find(a => a.id === id) || data.articles[0];
@@ -838,6 +890,50 @@ function replaceDiscordIcons() {
 
 document.addEventListener('DOMContentLoaded', replaceBrandIcons);
 handleHomeAnchorNavigation();
+replaceBrandIcons();
+
+function renderFooter(page){
+  const footer = document.querySelector('footer.site-footer');
+  if (!footer) return;
+
+  const modelsLink = page === 'home' ? '#models' : './#models';
+  const buyLink = page === 'model' ? '#modelBuy': (page==='home' ? '#buy' : './#buy');
+  
+  const year = new Date().getFullYear();
+  footer.innerHTML = `
+    <div class="container footer-grid">
+      <div>
+        <a href="./"><img
+          class="footer-logo"
+          src="assets/images/pibrick-logo.svg"
+          alt="piBrick"
+        /></a>
+        <p>Open hardware. Pocket-sized Linux.</p>
+      </div>
+      <div>
+        <span class="footer-title">Explore</span><a href="${modelsLink}">Models</a
+        ><a href="./articles.html">Articles</a><a href="${buyLink}">Buy / Build</a>
+      </div>
+      <div>
+        <span class="footer-title">Open source</span
+        ><a href="https://github.com/amarullz/pibrick">GitHub</a
+        ><a href="https://wiki.pibrick.net">Wiki</a
+        ><a href="https://discord.gg/e9qUdJ4aVr">Discord</a>
+      </div>
+      <div>
+        <span class="footer-title">Tools</span
+        ><a href="https://serial.pibrick.net/">Serial Shell</a
+        ><a href="https://vial.rocks/">Keyboard Layout</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© <span id="year">${year}</span> piBrick - <a href="terms.html">Terms of Service</a> -
+        <a href="privacy.html">Privacy Policy</a></span
+      ><span>Open hardware by <a href="https://amarullz.com" target="_blank"
+        rel="noopener">amarullz.com</a></span>
+    </div>
+  `;
+}
 
 (async function init() {
   try {
@@ -854,6 +950,7 @@ handleHomeAnchorNavigation();
     if (close) close.addEventListener('click', () => closeLightbox());
     const box = document.getElementById('lightbox');
     if (box) box.addEventListener('click', e => { if (e.target === box) closeLightbox(); });
+    renderFooter(page);
   } catch (error) {
     console.error(error);
     const target = document.querySelector('main') || document.body;
