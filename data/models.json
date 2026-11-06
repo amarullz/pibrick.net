@@ -62,34 +62,22 @@
     },
     "gallery": [
       {
-        "src": "assets/images/pocketcm5-hero.png",
+        "src": "assets/images/pocketcm5/01.jpg",
         "alt": "piBrick PocketCM5 hero view",
-        "label": "PocketCM5"
+        "label": "PocketCM5",
+        "description": "The piBrick PocketCM5 is a compact handheld computer platform built around the Raspberry Pi Compute Module 5. It features a physical keyboard, a high-resolution display, and open hardware design for makers and developers."
       },
       {
-        "src": "assets/images/pibrick-photo-1.png",
-        "alt": "piBrick PocketCM5 in handheld use",
-        "label": "Handheld"
+        "src": "assets/images/pocketcm5/02.jpg",
+        "alt": "piBrick PocketCM5 hero view",
+        "label": "PocketCM5",
+        "description": "The piBrick PocketCM5 is a compact handheld computer platform built around the Raspberry Pi Compute Module 5. It features a physical keyboard, a high-resolution display, and open hardware design for makers and developers."
       },
       {
-        "src": "assets/images/pibrick-photo-2.jpg",
-        "alt": "piBrick PocketCM5 showing Linux console",
-        "label": "Linux console"
-      },
-      {
-        "src": "assets/images/pibrick-photo-3.jpg",
-        "alt": "piBrick PocketCM5 on a desk",
-        "label": "Desktop view"
-      },
-      {
-        "src": "assets/images/pibrick-clear.jpg",
-        "alt": "piBrick PocketCM5 clear case",
-        "label": "Clear case"
-      },
-      {
-        "src": "assets/images/mainboard-map.png",
-        "alt": "piBrick PocketCM5 mainboard connector map",
-        "label": "Mainboard map"
+        "src": "assets/images/pocketcm5/03.jpg",
+        "alt": "piBrick PocketCM5 hero view",
+        "label": "PocketCM5",
+        "description": "The piBrick PocketCM5 is a compact handheld computer platform built around the Raspberry Pi Compute Module 5. It features a physical keyboard, a high-resolution display, and open hardware design for makers and developers."
       }
     ],
     "videos": [

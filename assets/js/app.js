@@ -2,31 +2,36 @@ const DATA_URL = 'data/site.json';
 const MODELS_URL = 'data/models.json';
 const SLIDESHOW_URL = 'data/slideshow.json';
 const ARTICLES_URL = 'content/articles.json';
+const GALLERY_URL = 'data/gallery.json';
 
 async function loadData() {
-  const [siteRes, modelsRes, slideshowRes, articlesRes] = await Promise.all([
+  const [siteRes, modelsRes, slideshowRes, articlesRes, galleryRes] = await Promise.all([
     fetch(DATA_URL, { cache: 'no-store' }),
     fetch(MODELS_URL, { cache: 'no-store' }),
     fetch(SLIDESHOW_URL, { cache: 'no-store' }),
-    fetch(ARTICLES_URL, { cache: 'no-store' })
+    fetch(ARTICLES_URL, { cache: 'no-store' }),
+    fetch(GALLERY_URL, { cache: 'no-store' })
   ]);
 
   if (!siteRes.ok) throw new Error(`Could not load ${DATA_URL}`);
   if (!modelsRes.ok) throw new Error(`Could not load ${MODELS_URL}`);
   if (!slideshowRes.ok) throw new Error(`Could not load ${SLIDESHOW_URL}`);
   if (!articlesRes.ok) throw new Error(`Could not load ${ARTICLES_URL}`);
+  if (!galleryRes.ok) throw new Error(`Could not load ${GALLERY_URL}`);
 
-  const [data, models, slideshow, articles] = await Promise.all([
+  const [data, models, slideshow, articles, gallery] = await Promise.all([
     siteRes.json(),
     modelsRes.json(),
     slideshowRes.json(),
-    articlesRes.json()
+    articlesRes.json(),
+    galleryRes.json()
   ]);
 
   // Combine data into the existing application structure
   data.models = models;
   data.heroSlides = slideshow;
   data.articles = articles;
+  data.homeGallery = gallery;
 
   return data;
 }
@@ -187,13 +192,13 @@ function renderHomeShowcase(data) {
   gallery.innerHTML = photos.map(photo => `
     <button class="gallery-item"
       data-src="${esc(photo.src)}"
-      data-alt="${esc(photo.alt)}"
+      data-alt="${esc(photo.alt||photo.label)}"
       data-label="${esc(photo.label)}"
       data-description="${esc(photo.description || '')}"
       aria-label="View ${esc(photo.label)}">
 
       <img src="${esc(photo.src)}"
-        alt="${esc(photo.alt)}"
+        alt="${esc(photo.alt||photo.label)}"
         loading="lazy">
     </button>
   `).join('');
@@ -424,7 +429,14 @@ function renderModel(data) {
           </div>
 
           <div class="board-map">
-            <img src="${model.specsImage}" alt="Specifications diagram for ${esc(model.name)}">
+              <div class="board-map-image"
+                data-src="${model.specsImage}"
+                data-alt="Specifications diagram for ${esc(model.name)}"
+                data-label="Specifications"
+                aria-label="View Specifications"
+                data-description="Diagram showing the technical specifications of the ${esc(model.name)}">
+                <img src="${model.specsImage}" alt="Specifications diagram for ${esc(model.name)}">
+              </div>  
           </div>
         </div>
       </div>
@@ -443,7 +455,10 @@ function renderModel(data) {
           ${(model.gallery || []).map(g => `
             <button class="gallery-item"
               data-src="${esc(g.src)}"
-              data-alt="${esc(g.alt)}">
+              data-alt="${esc(g.alt)}"
+              data-label="${esc(g.label)}"
+              aria-label="View ${esc(g.label)}"
+              data-description="${esc(g.description || '')}">
               <img src="${esc(g.src)}" alt="${esc(g.alt)}">
               <span>${esc(g.label)}</span>
             </button>
@@ -569,7 +584,7 @@ function renderModel(data) {
   });
 
   // Gallery image popup
-  const photoItems = [...root.querySelectorAll('.gallery-item')];
+  const photoItems = [...root.querySelectorAll('.gallery-item, .board-map-image')];
   photoItems.forEach((item, index) => {
     item.addEventListener('click', () => {
       openLightbox(photoItems, index);

@@ -780,6 +780,13 @@ h1 em{
   background: #0e0e0e;
   cursor: zoom-in;
 }
+.board-map-image{
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+}
+.board-map-image:hover{
+  transform: scale(1.02);
+}
 .gallery-item img {
   width: 100%;
   height: 230px;

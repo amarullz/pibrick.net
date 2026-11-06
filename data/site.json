@@ -22,44 +22,6 @@
       "thumbnail": "https://img.youtube.com/vi/-haFFYMq1-w/maxresdefault.jpg"
     }
   ],
-  "homeGallery": [
-      {
-        "src": "assets/images/pocketcm5/01.jpg",
-        "alt": "piBrick PocketCM5 hero view",
-        "label": "PocketCM5",
-        "description": "The piBrick PocketCM5 is a compact handheld computer platform built around the Raspberry Pi Compute Module 5. It features a physical keyboard, a high-resolution display, and open hardware design for makers and developers."
-      },
-      {
-        "src": "assets/images/pocketcm5/02.jpg",
-        "alt": "piBrick PocketCM5 in handheld use",
-        "label": "Handheld",
-        "description": "The piBrick PocketCM5 in handheld use."
-      },
-      {
-        "src": "assets/images/pocketcm5/03.jpg",
-        "alt": "piBrick PocketCM5 showing Linux console",
-        "label": "Linux console",
-        "description": "The piBrick PocketCM5 showing a Linux console on its display."
-      },
-      {
-        "src": "assets/images/pibrick-photo-3.jpg",
-        "alt": "piBrick PocketCM5 on a desk",
-        "label": "Desktop view",
-        "description": "The piBrick PocketCM5 on a desk."
-      },
-      {
-        "src": "assets/images/pibrick-photo-1.png",
-        "alt": "piBrick PocketCM5 clear case",
-        "label": "Clear case",
-        "description": "The piBrick PocketCM5 with a clear case, showcasing its internal components."
-      },
-      {
-        "src": "assets/images/pibrick-photo-2.jpg",
-        "alt": "piBrick PocketCM5 mainboard connector map",
-        "label": "Mainboard map",
-        "description": "A map of the piBrick PocketCM5 mainboard connectors and components."
-      }
-  ],
   "quickQuestions": [
     {"q":"What is piBrick?","a":"piBrick is an open-source handheld computer platform built around the Raspberry Pi Compute Module family, designed for makers who want a small Linux computer they can understand, modify and rebuild."},
     {"q":"Is the Raspberry Pi CM5 included?","a":"No. The piBrick PocketCM5 is a carrier-board and handheld platform. Raspberry Pi CM5, battery and NVMe SSD are sourced separately unless a specific bundle says otherwise."},
@@ -85,6 +47,8 @@
   ],
   "testimonials": [
     {"quote":"The piBrick gets right what most pocket computers miss. It's upgradable, open by design, and repairable. It's one of the few handhelds meant to grow with you, not be tossed aside.","name":"Firebox530", "meta":"Community feedback"},
-    {"quote":"Seller was really nice and awnsered all my questions about it ~ Packaging was good and everything functioned normally.","name":"Jonathan","meta":"Tindie Buyer"}
+    {"quote":"Seller was really nice and awnsered all my questions about it ~ Packaging was good and everything functioned normally.","name":"Jonathan","meta":"Tindie Buyer"},
+    {"quote":"This is awesome--I've been scouring the internet for a CM5 carrier board that would do exactly this and had nearly resolved to designing my own when I found this project. It's amazing how close this project is to my concept drawings.","name":"thetgi2.0","meta":"OSHWLab Maker"},
+    {"quote":"Impressive project!😎","name":"Karla","meta":"EasyEDA Official"}
   ]
 }
