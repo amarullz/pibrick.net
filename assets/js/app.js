@@ -174,7 +174,11 @@ function renderHomeShowcase(data) {
 
   if (!section || !gallery || !videoGrid) return;
 
-  const photos = data.homeGallery || [];
+  const photos = (data.homeGallery?([...data.homeGallery]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 6)):[]);
+
+  // const photos = data.homeGallery || [];
   const videos = data.homeVideos || [];
 
   section.hidden = !photos.length && !videos.length;
