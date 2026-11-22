@@ -203,12 +203,16 @@ document.querySelector('#showAll').addEventListener('click',()=>{document.queryS
 document.querySelector('#hideAll').addEventListener('click',()=>{document.querySelectorAll('#partList input').forEach(x=>{if(x.checked){x.checked=false;x.dispatchEvent(new Event('change'));}});});
 const partsPanel=document.querySelector('#parts');
 const partsToggle=document.querySelector('#partsToggle');
-partsToggle.addEventListener('click',()=>{
+function partsToggleShowHide(){
   const isVisible=partsPanel.style.display!=='none';
   partsPanel.style.display=isVisible?'none':'block';
   partsToggle.textContent=isVisible?'Show components':'Hide components';
   partsToggle.setAttribute('aria-expanded',String(!isVisible));
+}
+partsToggle.addEventListener('click',()=>{
+  partsToggleShowHide();
 });
+partsToggleShowHide();
 
 // Lighting and shadow controls are independent.
 const shadowToggle=document.querySelector('#shadowToggle');
