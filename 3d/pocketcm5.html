@@ -59,10 +59,15 @@ html, body {
   <div style="display:flex;gap:7px;margin-top:10px"><button id="showAll" style="flex:1">Show all</button><button id="hideAll" style="flex:1">Hide all</button></div>
 </section>
 <section id="controls" class="panel">
-  <div class="control-row"><label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span></div>
-  <div class="control-row"><button id="assembled" style="flex:1">Assembled</button><button id="exploded" class="primary" style="flex:1">Exploded</button><button id="home">♻️</button>
-    <button id="shadowToggle" type="button" aria-pressed="true">🔦</button>
-    <button style="flex:1" id="materialToggle" type="button" aria-pressed="true">Black Case</button>
+  <div class="control-row">
+    <label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span>
+    <button id="materialToggle" type="button" aria-pressed="true">Black Case</button>
+  </div>
+  <div class="control-row">
+    <button id="assembled" style="flex:1">Assembled</button>
+    <button id="exploded" class="primary" style="flex:1">Exploded</button>
+    <button id="home" title="Reset View">♻️</button>
+    <button title="Toggle Shadows" id="shadowToggle" type="button" aria-pressed="true">🔦</button>
   </div>
 </section>
 <div id="hint">Drag to rotate · Scroll/pinch to zoom · Right-drag to pan</div>
