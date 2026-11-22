@@ -176,7 +176,7 @@ loader.load(MODEL_URL,collada=>{
   });
 
   // Start exploded, then fit the camera to the complete exploded assembly.
-  applyExplode(1);
+  applyExplode(0);
   fitCameraToAssembly();
   updateCount();
   status.classList.add('hidden');
@@ -248,7 +248,7 @@ function fitCameraToAssembly(){
   const horizontalFov=2*Math.atan(Math.tan(verticalFov/2)*camera.aspect);
   // Fit within 80% of both viewport dimensions, with a little safety margin.
   const limitingFov=Math.min(verticalFov,horizontalFov);
-  const distance=radius/(Math.sin(limitingFov/2)*1.1);
+  const distance=radius/(Math.sin(limitingFov/2)*0.92);
   const direction=new THREE.Vector3(-1.0,0.2,1.5).normalize();
   camera.position.copy(sphere.center).addScaledVector(direction,distance);
   camera.near=Math.max(0.001,distance/1000);
