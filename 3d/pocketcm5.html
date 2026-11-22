@@ -43,7 +43,7 @@ html, body {
     background: linear-gradient(
         to bottom,
         #000000 0%,
-        #301903 100%
+        #291808 100%
     );
 }
 </style>
@@ -58,7 +58,7 @@ html, body {
   <div style="display:flex;gap:7px;margin-top:10px"><button id="showAll" style="flex:1">Show all</button><button id="hideAll" style="flex:1">Hide all</button></div>
 </section>
 <section id="controls" class="panel">
-  <div class="control-row"><label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span><button id="reset">Reset</button></div>
+  <div class="control-row"><label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span><button id="reset">Reset</button><button id="shadowToggle" type="button" aria-pressed="true">Shadows: On</button></div>
   <div class="control-row"><button id="assembled" style="flex:1">Assembled</button><button id="exploded" class="primary" style="flex:1">Exploded</button><button id="home" style="flex:1">Reset view</button></div>
 </section>
 <div id="hint">Drag to rotate · Scroll/pinch to zoom · Right-drag to pan</div>
@@ -87,19 +87,60 @@ scene.background = null;
 const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.001,10000);
 const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.75)); renderer.setSize(innerWidth,innerHeight);
-renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.15;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;
+
+// Enable real-time shadows for better depth and surface definition.
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 viewport.appendChild(renderer.domElement);
-const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.07;
-scene.add(new THREE.HemisphereLight(0xeaf4ff,0x343b48,2.0));
-const key=new THREE.DirectionalLight(0xffffff,2.5);key.position.set(5,8,7);scene.add(key);
-const fill=new THREE.DirectionalLight(0x9acfff,1.25);fill.position.set(-6,2,-5);scene.add(fill);
-const rim=new THREE.DirectionalLight(0xffffff,1.1);rim.position.set(0,-5,5);scene.add(rim);
+
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.dampingFactor=.07;
+
+// Three-point studio lighting: neutral key, cool fill, and edge/rim light.
+scene.add(new THREE.HemisphereLight(0xeaf4ff,0x252a33,0.75));
+scene.add(new THREE.AmbientLight(0xffffff,0.25));
+
+const key=new THREE.DirectionalLight(0xffffff,3.0);
+key.position.set(-4.5,7,6);
+key.castShadow=true;
+key.shadow.mapSize.set(2048,2048);
+key.shadow.camera.left=-8;
+key.shadow.camera.right=8;
+key.shadow.camera.top=8;
+key.shadow.camera.bottom=-8;
+key.shadow.camera.near=0.1;
+key.shadow.camera.far=30;
+key.shadow.bias=-0.00015;
+key.shadow.normalBias=0.025;
+key.shadow.radius=4;
+scene.add(key);
+
+const fill=new THREE.DirectionalLight(0xb8d8ff,1.15);
+fill.position.set(6,2,4);
+scene.add(fill);
+
+const rim=new THREE.DirectionalLight(0xffffff,2.0);
+rim.position.set(2,4,-6);
+scene.add(rim);
 
 let modelRoot, assembly, targets={}, basePositions={}, modelSize=1, fitScale=1, originalCenter=new THREE.Vector3();
 const loader=new ColladaLoader();
 function fail(err){console.error(err);status.innerHTML='<div id="error">Could not load the 3D model.<br>'+String(err?.message||err)+'<br><br>Check that pocketcm5-explode.dae and the pocketcm5-explode/ texture folder are in the same directory as index.html, and that the page is served over HTTP/HTTPS.</div>';}
 loader.load(MODEL_URL,collada=>{
   modelRoot=collada.scene;
+
+  // Let model meshes cast and receive shadows from the key light.
+  modelRoot.traverse(obj=>{
+    if(obj.isMesh){
+      obj.castShadow=true;
+      obj.receiveShadow=true;
+    }
+  });
+
   // Keep the ColladaLoader's Z-up correction intact. Center the loaded scene
   // using a separate, unrotated parent so the offset is applied in world axes.
   assembly=new THREE.Group();
@@ -169,6 +210,31 @@ partsToggle.addEventListener('click',()=>{
   partsToggle.textContent=isVisible?'Show components':'Hide components';
   partsToggle.setAttribute('aria-expanded',String(!isVisible));
 });
+
+// Lighting and shadow controls are independent.
+const shadowToggle=document.querySelector('#shadowToggle');
+let lightingEnabled=true;
+let shadowsEnabled=true;
+
+function updateLightingControls(){
+  // Keep the key/fill/rim lights as a group; ambient lights are included too.
+  key.visible=lightingEnabled;
+  fill.visible=lightingEnabled;
+  rim.visible=lightingEnabled;
+  scene.children.forEach(obj=>{
+    if(obj.isHemisphereLight || (obj.isAmbientLight && !obj.userData.isShadowHelper)){
+      obj.visible=lightingEnabled;
+    }
+  });
+  renderer.shadowMap.enabled=shadowsEnabled;
+  key.castShadow=shadowsEnabled && lightingEnabled;
+  shadowToggle.textContent=`Shadows: ${shadowsEnabled?'On':'Off'}`;
+  shadowToggle.setAttribute('aria-pressed',String(shadowsEnabled));
+}
+shadowToggle.addEventListener('click',()=>{
+  shadowsEnabled=!shadowsEnabled;
+  updateLightingControls();
+});
 function fitCameraToAssembly(){
   if(!assembly)return;
   assembly.updateMatrixWorld(true);
@@ -179,7 +245,7 @@ function fitCameraToAssembly(){
   const horizontalFov=2*Math.atan(Math.tan(verticalFov/2)*camera.aspect);
   // Fit within 80% of both viewport dimensions, with a little safety margin.
   const limitingFov=Math.min(verticalFov,horizontalFov);
-  const distance=radius/(Math.sin(limitingFov/2)*1.0);
+  const distance=radius/(Math.sin(limitingFov/2)*1.1);
   const direction=new THREE.Vector3(-1.0,0.2,1.5).normalize();
   camera.position.copy(sphere.center).addScaledVector(direction,distance);
   camera.near=Math.max(0.001,distance/1000);
@@ -190,6 +256,7 @@ function fitCameraToAssembly(){
   controls.maxDistance=distance*8;
   controls.update();
 }
+
 document.querySelector('#home').addEventListener('click',fitCameraToAssembly);
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
 renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
