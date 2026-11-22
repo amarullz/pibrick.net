@@ -27,6 +27,7 @@
 #controls{left:50%;bottom:14px;transform:translateX(-50%);width:min(490px,calc(100% - 28px));padding:12px 14px}
 .control-row{display:flex;align-items:center;gap:10px}.control-row+.control-row{margin-top:10px}
 .control-row label{color:var(--muted);font-size:12px;white-space:nowrap}
+.control-row button{ white-space: nowrap;}
 input[type=range]{flex:1;min-width:50px;accent-color:var(--accent)}
 #explodeValue{font-variant-numeric:tabular-nums;width:38px;text-align:right;color:#e5f7ff;font-size:12px}
 button{border:1px solid var(--line);background:#ffffff0c;color:#eef5fb;border-radius:8px;padding:7px 10px;font:inherit;font-size:12px;cursor:pointer}
@@ -59,7 +60,10 @@ html, body {
 </section>
 <section id="controls" class="panel">
   <div class="control-row"><label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span></div>
-  <div class="control-row"><button id="assembled" style="flex:1">Assembled</button><button id="exploded" class="primary" style="flex:1">Exploded</button><button id="home" style="flex:1">Fit</button><button id="shadowToggle" type="button" aria-pressed="true">Shadows: On</button></div>
+  <div class="control-row"><button id="assembled" style="flex:1">Assembled</button><button id="exploded" class="primary" style="flex:1">Exploded</button><button id="home">♻️</button>
+    <button id="shadowToggle" type="button" aria-pressed="true">🔦</button>
+    <button style="flex:1" id="materialToggle" type="button" aria-pressed="true">Black Case</button>
+  </div>
 </section>
 <div id="hint">Drag to rotate · Scroll/pinch to zoom · Right-drag to pan</div>
 <script type="importmap">
@@ -231,7 +235,7 @@ function updateLightingControls(){
   });
   renderer.shadowMap.enabled=shadowsEnabled;
   key.castShadow=shadowsEnabled && lightingEnabled;
-  shadowToggle.textContent=`Shadows: ${shadowsEnabled?'On':'Off'}`;
+  shadowToggle.textContent=`${shadowsEnabled?'🔦':'💡'}`;
   shadowToggle.setAttribute('aria-pressed',String(shadowsEnabled));
 }
 shadowToggle.addEventListener('click',()=>{
@@ -263,6 +267,84 @@ function fitCameraToAssembly(){
 document.querySelector('#home').addEventListener('click',fitCameraToAssembly);
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
 renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
+
+
+const caseOriginalMaterials={};
+const caseClearMaterials={};
+
+function makeGlassMaterial(source, overlayInternalParts=false){
+  const glass=new THREE.MeshPhysicalMaterial({
+    color:0xf5f8ff,
+    map:source.map || null,
+    alphaMap:source.alphaMap || null,
+    aoMap:source.aoMap || null,
+    bumpMap:source.bumpMap || null,
+    normalMap:source.normalMap || null,
+    roughnessMap:source.roughnessMap || null,
+    metalnessMap:source.metalnessMap || null,
+    emissiveMap:source.emissiveMap || null,
+    displacementMap:source.displacementMap || null,
+    lightMap:source.lightMap || null,
+    envMap:source.envMap || null,
+    vertexColors:source.vertexColors || false,
+    side:source.side,
+    transparent:true,
+    opacity:0.24,
+    roughness:0.26,
+    metalness:0,
+    transmission:0,
+    clearcoat:1,
+    clearcoatRoughness:0.12,
+    depthWrite:false
+  });
+  glass.name='piBrick_ClearCase_AlphaGlass';
+  return glass;
+}
+
+function setCaseMaterial(partName, mode){
+  const root=targets[partName];
+  if(!root)return;
+
+  root.traverse(obj=>{
+    if(!obj.isMesh)return;
+
+    // Only the two case shells get the late overlay pass. Internal parts
+    // keep their original opaque materials and normal depth testing.
+    const isCaseOverlay=mode==='clear' &&
+      (partName==='Front-Case' || partName==='Back-Case');
+    obj.renderOrder=isCaseOverlay?10:0;
+
+    if(!caseOriginalMaterials[obj.uuid]){
+      caseOriginalMaterials[obj.uuid]=Array.isArray(obj.material)
+        ? obj.material.slice()
+        : obj.material;
+    }
+
+    if(mode==='clear'){
+      if(!caseClearMaterials[obj.uuid]){
+        const originals=caseOriginalMaterials[obj.uuid];
+        caseClearMaterials[obj.uuid]=Array.isArray(originals)
+          ? originals.map(mat=>makeGlassMaterial(mat))
+          : makeGlassMaterial(originals);
+      }
+      obj.material=caseClearMaterials[obj.uuid];
+    }else{
+      obj.material=caseOriginalMaterials[obj.uuid];
+    }
+  });
+}
+
+const materialToggle=document.querySelector('#materialToggle');
+var casingMaterial='Black';
+function toggleMaterial(){
+  casingMaterial=casingMaterial==='Black'?'Clear':'Black';
+  materialToggle.textContent=`${casingMaterial} Case`;
+  materialToggle.setAttribute('aria-pressed',String(casingMaterial==='Clear'));
+  setCaseMaterial('Front-Case',casingMaterial.toLowerCase());
+  setCaseMaterial('Back-Case',casingMaterial.toLowerCase());
+}
+materialToggle.addEventListener('click',toggleMaterial);
+
 </script>
 </body>
 </html>
