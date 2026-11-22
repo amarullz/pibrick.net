@@ -442,6 +442,18 @@ function renderModel(data) {
       </div>
     </section>
 
+    <section class="section-pad" id="view3d">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Check it out</div>
+            <h2>3D Viewer</h2>
+          </div>
+        </div>
+        <iframe src="./3d/${model.id}.html" title="3D view of ${esc(model.name)}" allowfullscreen style="width: 100%; height: 80vh; border-radius: 12px;" frameborder="0"></iframe>
+      </div>
+    </section>
+
     <section class="section-pad" id="gallery">
       <div class="container">
         <div class="section-head">

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>piBrick PocketCM5 — 3D Exploded Viewer</title>
+<style>
+:root{color-scheme:dark;--panel:rgba(15,19,26,.4);--line:rgba(255,255,255,.12);--muted:#aab4c2;--accent:#7dd3fc}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#11151c;color:#f4f7fb;font:14px/1.4 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+#viewport{position:absolute;inset:0}canvas{display:block;width:100%;height:100%;outline:none}
+.panel{position:absolute;z-index:2;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px #0005;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+#parts {
+    top: 58px;
+    left: 14px;
+    right: auto;
+    width: 230px;
+    max-height: calc(100% - 28px);
+    overflow: auto;
+    padding: 13px;
+}
+.panel-title{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:9px}
+.panel-title span{color:var(--muted);font-size:11px;font-weight:500}
+.part{display:flex;align-items:center;gap:9px;padding:7px 3px;border-top:1px solid rgba(255,255,255,.07);cursor:pointer;user-select:none}
+.part input{accent-color:var(--accent);width:15px;height:15px;margin:0}
+.part .eye{font-size:14px;width:17px;text-align:center;color:#c5d0dd}
+.part label{flex:1;cursor:pointer;font-size:12px}
+#controls{left:50%;bottom:14px;transform:translateX(-50%);width:min(490px,calc(100% - 28px));padding:12px 14px}
+.control-row{display:flex;align-items:center;gap:10px}.control-row+.control-row{margin-top:10px}
+.control-row label{color:var(--muted);font-size:12px;white-space:nowrap}
+input[type=range]{flex:1;min-width:50px;accent-color:var(--accent)}
+#explodeValue{font-variant-numeric:tabular-nums;width:38px;text-align:right;color:#e5f7ff;font-size:12px}
+button{border:1px solid var(--line);background:#ffffff0c;color:#eef5fb;border-radius:8px;padding:7px 10px;font:inherit;font-size:12px;cursor:pointer}
+button:hover{background:#ffffff18}button:active{transform:translateY(1px)}
+button.primary{background:#d8f3ff;color:#10212b;border-color:#d8f3ff;font-weight:700}
+#hint{position:absolute;left:14px;bottom:16px;color:#c2cbd6;font-size:11px;text-shadow:0 1px 4px #000;pointer-events:none}
+#status{position:absolute;inset:0;display:grid;place-items:center;color:#dbeafe;z-index:5;font-size:13px}
+#status.hidden{display:none}.spinner{width:22px;height:22px;border:2px solid #ffffff30;border-top-color:#7dd3fc;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#error{max-width:min(560px,90vw);padding:20px;border:1px solid #8b4141;border-radius:12px;background:#291919;color:#ffdede;white-space:pre-wrap}
+@media(max-width:650px){#parts{left:10px;width:190px;max-height:42%;padding:10px}#partsToggle{top:10px;left:10px}#controls{bottom:10px}#hint{display:none}.part{padding:5px 2px}.part label{font-size:11px}}
+#viewport,#status,
+html, body {
+    background: linear-gradient(
+        to bottom,
+        #000000 0%,
+        #301903 100%
+    );
+}
+</style>
+</head>
+<body>
+<div id="viewport"></div>
+<div id="status"><div><div class="spinner"></div>Loading piBrick PocketCM5 model…</div></div>
+<button id="partsToggle" class="panel" type="button" aria-controls="parts" aria-expanded="true" style="position:absolute;z-index:3;top:14px;left:14px;">Hide components</button>
+<section id="parts" class="panel">
+  <div class="panel-title">Components <span id="visibleCount">10 / 10 visible</span></div>
+  <div id="partList"></div>
+  <div style="display:flex;gap:7px;margin-top:10px"><button id="showAll" style="flex:1">Show all</button><button id="hideAll" style="flex:1">Hide all</button></div>
+</section>
+<section id="controls" class="panel">
+  <div class="control-row"><label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span><button id="reset">Reset</button></div>
+  <div class="control-row"><button id="assembled" style="flex:1">Assembled</button><button id="exploded" class="primary" style="flex:1">Exploded</button><button id="home" style="flex:1">Reset view</button></div>
+</section>
+<div id="hint">Drag to rotate · Scroll/pinch to zoom · Right-drag to pan</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const MODEL_URL='./pocketcm5-explode.dae';
+const PARTS=[
+ ['Back-Case','front',250],['Speaker-IO','front',140],['Battery-Holder','front',150],
+ ['Camera-Holder','front',100],['Mainboard','back',50],['Keyboard-Holder','back',100],
+ ['Switches','corner',50],['Keyboard','back',150],['Display','back',200],['Front-Case','back',250]
+];
+const viewport=document.querySelector('#viewport'), status=document.querySelector('#status');
+const scene=new THREE.Scene(); 
+scene.background = null;
+const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.001,10000);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.75)); renderer.setSize(innerWidth,innerHeight);
+renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.15;
+viewport.appendChild(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.07;
+scene.add(new THREE.HemisphereLight(0xeaf4ff,0x343b48,2.0));
+const key=new THREE.DirectionalLight(0xffffff,2.5);key.position.set(5,8,7);scene.add(key);
+const fill=new THREE.DirectionalLight(0x9acfff,1.25);fill.position.set(-6,2,-5);scene.add(fill);
+const rim=new THREE.DirectionalLight(0xffffff,1.1);rim.position.set(0,-5,5);scene.add(rim);
+
+let modelRoot, assembly, targets={}, basePositions={}, modelSize=1, fitScale=1, originalCenter=new THREE.Vector3();
+const loader=new ColladaLoader();
+function fail(err){console.error(err);status.innerHTML='<div id="error">Could not load the 3D model.<br>'+String(err?.message||err)+'<br><br>Check that pocketcm5-explode.dae and the pocketcm5-explode/ texture folder are in the same directory as index.html, and that the page is served over HTTP/HTTPS.</div>';}
+loader.load(MODEL_URL,collada=>{
+  modelRoot=collada.scene;
+  // Keep the ColladaLoader's Z-up correction intact. Center the loaded scene
+  // using a separate, unrotated parent so the offset is applied in world axes.
+  assembly=new THREE.Group();
+  scene.add(assembly);
+  assembly.add(modelRoot);
+  modelRoot.updateMatrixWorld(true);
+  const initialBox=new THREE.Box3().setFromObject(modelRoot);
+  if(initialBox.isEmpty()) throw new Error('The COLLADA file loaded, but its visual scene contains no renderable geometry.');
+  originalCenter.copy(initialBox.getCenter(new THREE.Vector3()));
+  const rawSize=initialBox.getSize(new THREE.Vector3());
+  modelSize=Math.max(rawSize.x,rawSize.y,rawSize.z);
+  fitScale=4.2/modelSize;
+  assembly.scale.setScalar(fitScale);
+  assembly.position.copy(originalCenter).multiplyScalar(-fitScale);
+  assembly.updateMatrixWorld(true);
+
+  // Index all named nodes, including nested assembly groups.
+  modelRoot.traverse(obj=>{if(PARTS.some(p=>p[0]===obj.name))targets[obj.name]=obj;});
+  const missing=PARTS.map(p=>p[0]).filter(n=>!targets[n]);
+  console.info('piBrick COLLADA groups found:',Object.keys(targets));
+  if(missing.length) console.warn('Assembly groups not found in updated DAE:',missing);
+
+  for(const [name] of PARTS){const obj=targets[name];if(obj)basePositions[name]=obj.position.clone();}
+  const list=document.querySelector('#partList');
+  PARTS.forEach(([name])=>{
+    const row=document.createElement('div');row.className='part';
+    const input=document.createElement('input');input.type='checkbox';input.checked=true;input.id='part-'+name.replaceAll(/[^a-z0-9]/gi,'');
+    const eye=document.createElement('span');eye.className='eye';eye.textContent='◉';
+    const label=document.createElement('label');label.htmlFor=input.id;label.textContent=name;
+    input.addEventListener('change',()=>{if(targets[name])targets[name].visible=input.checked;eye.textContent=input.checked?'◉':'○';updateCount();});
+    row.addEventListener('click',e=>{if(e.target!==input&&e.target!==label){input.checked=!input.checked;input.dispatchEvent(new Event('change'));}});
+    row.append(input,eye,label);list.appendChild(row);
+  });
+
+  // Start exploded, then fit the camera to the complete exploded assembly.
+  applyExplode(1);
+  fitCameraToAssembly();
+  updateCount();
+  status.classList.add('hidden');
+},undefined,fail);
+
+function applyExplode(amount){
+  for(const [name,direction,mult] of PARTS){
+    const obj=targets[name];if(!obj)continue;
+    const p=basePositions[name].clone();
+    const distance=modelSize*.115*mult*amount;
+    if(direction==='back')p.y-=distance;
+    else if(direction==='front')p.y+=distance;
+    else if(direction==='corner'){p.x-=distance;p.z-=distance;}
+    obj.position.copy(p);
+  }
+  document.querySelector('#explode').value=amount;
+  document.querySelector('#explodeValue').textContent=Math.round(amount*100)+'%';
+}
+function updateCount(){const checks=[...document.querySelectorAll('#partList input')];const n=checks.filter(x=>x.checked).length;document.querySelector('#visibleCount').textContent=`${n} / ${checks.length} visible`;}
+document.querySelector('#explode').addEventListener('input',e=>applyExplode(Number(e.target.value)));
+document.querySelector('#reset').addEventListener('click',()=>applyExplode(1));
+document.querySelector('#assembled').addEventListener('click',()=>applyExplode(0));
+document.querySelector('#exploded').addEventListener('click',()=>applyExplode(1));
+document.querySelector('#showAll').addEventListener('click',()=>{document.querySelectorAll('#partList input').forEach(x=>{if(!x.checked){x.checked=true;x.dispatchEvent(new Event('change'));}});});
+document.querySelector('#hideAll').addEventListener('click',()=>{document.querySelectorAll('#partList input').forEach(x=>{if(x.checked){x.checked=false;x.dispatchEvent(new Event('change'));}});});
+const partsPanel=document.querySelector('#parts');
+const partsToggle=document.querySelector('#partsToggle');
+partsToggle.addEventListener('click',()=>{
+  const isVisible=partsPanel.style.display!=='none';
+  partsPanel.style.display=isVisible?'none':'block';
+  partsToggle.textContent=isVisible?'Show components':'Hide components';
+  partsToggle.setAttribute('aria-expanded',String(!isVisible));
+});
+function fitCameraToAssembly(){
+  if(!assembly)return;
+  assembly.updateMatrixWorld(true);
+  const bounds=new THREE.Box3().setFromObject(assembly);
+  const sphere=bounds.getBoundingSphere(new THREE.Sphere());
+  const radius=Math.max(sphere.radius,0.001);
+  const verticalFov=THREE.MathUtils.degToRad(camera.fov);
+  const horizontalFov=2*Math.atan(Math.tan(verticalFov/2)*camera.aspect);
+  // Fit within 80% of both viewport dimensions, with a little safety margin.
+  const limitingFov=Math.min(verticalFov,horizontalFov);
+  const distance=radius/(Math.sin(limitingFov/2)*1.0);
+  const direction=new THREE.Vector3(-1.0,0.2,1.5).normalize();
+  camera.position.copy(sphere.center).addScaledVector(direction,distance);
+  camera.near=Math.max(0.001,distance/1000);
+  camera.far=distance*100;
+  camera.updateProjectionMatrix();
+  controls.target.copy(sphere.center);
+  controls.minDistance=radius*0.15;
+  controls.maxDistance=distance*8;
+  controls.update();
+}
+document.querySelector('#home').addEventListener('click',fitCameraToAssembly);
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
+</script>
+</body>
+</html>
