@@ -5,7 +5,7 @@
     "description": "piBrick is an open-source handheld computer platform built around the Raspberry Pi Compute Module 5.",
     "logo": "assets/images/pibrick-logo.svg",
     "accent": "#ff6a00",
-    "githubPagesDomain": "amarullz.com",
+    "githubPagesDomain": "pibrick.net",
     "author": "Ahmad Amarullah"
   },
   "homeVideos": [
