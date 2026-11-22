@@ -58,8 +58,8 @@ html, body {
   <div style="display:flex;gap:7px;margin-top:10px"><button id="showAll" style="flex:1">Show all</button><button id="hideAll" style="flex:1">Hide all</button></div>
 </section>
 <section id="controls" class="panel">
-  <div class="control-row"><label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span><button id="reset">Reset</button><button id="shadowToggle" type="button" aria-pressed="true">Shadows: On</button></div>
-  <div class="control-row"><button id="assembled" style="flex:1">Assembled</button><button id="exploded" class="primary" style="flex:1">Exploded</button><button id="home" style="flex:1">Reset view</button></div>
+  <div class="control-row"><label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span></div>
+  <div class="control-row"><button id="assembled" style="flex:1">Assembled</button><button id="exploded" class="primary" style="flex:1">Exploded</button><button id="home" style="flex:1">Fit</button><button id="shadowToggle" type="button" aria-pressed="true">Shadows: On</button></div>
 </section>
 <div id="hint">Drag to rotate · Scroll/pinch to zoom · Right-drag to pan</div>
 <script type="importmap">
@@ -197,7 +197,6 @@ function applyExplode(amount){
 }
 function updateCount(){const checks=[...document.querySelectorAll('#partList input')];const n=checks.filter(x=>x.checked).length;document.querySelector('#visibleCount').textContent=`${n} / ${checks.length} visible`;}
 document.querySelector('#explode').addEventListener('input',e=>applyExplode(Number(e.target.value)));
-document.querySelector('#reset').addEventListener('click',()=>applyExplode(1));
 document.querySelector('#assembled').addEventListener('click',()=>applyExplode(0));
 document.querySelector('#exploded').addEventListener('click',()=>applyExplode(1));
 document.querySelector('#showAll').addEventListener('click',()=>{document.querySelectorAll('#partList input').forEach(x=>{if(!x.checked){x.checked=true;x.dispatchEvent(new Event('change'));}});});
