@@ -86,9 +86,26 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const MODEL_URL='./pocketcm5-explode.dae';
 const PARTS=[
- ['Back-Case','front',250],['Speaker-IO','front',140],['Battery-Holder','front',150],
- ['Camera-Holder','front',100],['Mainboard','back',50],['Keyboard-Holder','back',100],
- ['Switches','corner',50],['Keyboard','back',150],['Display','back',200],['Front-Case','back',250]
+ ['Front-Case','back',250],
+ ['Back-Case','front',210],
+
+ ['Mainboard','back',50],
+ ['Speaker-IO','front',90],
+
+ ['Speakers','front',140],
+
+ ['Battery-Holder','front',30],
+ ['Camera-Holder','front',90],
+
+ ['Keyboard','back',150],
+ ['Display','back',200],
+ ['Keyboard-Holder','back',100],
+ ['Switches','corner',50],
+
+ ['Fan-Enclosure','front',250],
+ ['CM5-Fan','front',35],
+ ['CM5','front',5],
+ ['Battery','front',100]
 ];
 const viewport=document.querySelector('#viewport'), status=document.querySelector('#status');
 const scene=new THREE.Scene(); 
@@ -279,7 +296,7 @@ const caseClearMaterials={};
 
 function makeGlassMaterial(source, overlayInternalParts=false){
   const glass=new THREE.MeshPhysicalMaterial({
-    color:0xf5f8ff,
+    color:0xffffff,
     map:source.map || null,
     alphaMap:source.alphaMap || null,
     aoMap:source.aoMap || null,
@@ -294,12 +311,12 @@ function makeGlassMaterial(source, overlayInternalParts=false){
     vertexColors:source.vertexColors || false,
     side:source.side,
     transparent:true,
-    opacity:0.24,
-    roughness:0.26,
+    opacity:0.2,
+    roughness:0.05,
     metalness:0,
     transmission:0,
     clearcoat:1,
-    clearcoatRoughness:0.12,
+    clearcoatRoughness:0.01,
     depthWrite:false
   });
   glass.name='piBrick_ClearCase_AlphaGlass';
@@ -315,9 +332,8 @@ function setCaseMaterial(partName, mode){
 
     // Only the two case shells get the late overlay pass. Internal parts
     // keep their original opaque materials and normal depth testing.
-    const isCaseOverlay=mode==='clear' &&
-      (partName==='Front-Case' || partName==='Back-Case');
-    obj.renderOrder=isCaseOverlay?10:0;
+    // const isCaseOverlay=mode==='clear';
+    // obj.renderOrder=isCaseOverlay?10:0;
 
     if(!caseOriginalMaterials[obj.uuid]){
       caseOriginalMaterials[obj.uuid]=Array.isArray(obj.material)
@@ -347,6 +363,7 @@ function toggleMaterial(){
   materialToggle.setAttribute('aria-pressed',String(casingMaterial==='Clear'));
   setCaseMaterial('Front-Case',casingMaterial.toLowerCase());
   setCaseMaterial('Back-Case',casingMaterial.toLowerCase());
+  setCaseMaterial('Fan-Enclosure',casingMaterial.toLowerCase());
 }
 materialToggle.addEventListener('click',toggleMaterial);
 
