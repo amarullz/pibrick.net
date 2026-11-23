@@ -116,5 +116,135 @@
         "answer": "Yes. piBrick is based on Raspberry Pi CM5 and supports compatible Raspberry Pi operating systems."
       }
     ]
+  },
+
+
+
+  {
+    "id": "slide",
+    "name": "piBrick Slide",
+    "shortName": "Slide",
+    "status": "Early Access",
+    "eyebrow": "Sliding handheld Linux computer",
+    "hero": "assets/images/slide/slide-hero.png",
+    "cardImage": "assets/images/slide/slide-photo-1.jpg",
+    "summary": "A sliding-form-factor piBrick handheld built around the PocketCM5 MainBoard, featuring a 5.48-inch AMOLED display. Currently in early access.",
+    "highlights": [
+      "Based on the piBrick PocketCM5 MainBoard",
+      "5.48″ AMOLED display",
+      "Sliding handheld form factor",
+      "Open hardware project",
+      "Early access — development in progress"
+    ],
+    "specsImage": "assets/images/mainboard-map.png",
+    "specs": [
+      ["Compute", "Raspberry Pi Compute Module 5"],
+      ["Display", "5.48″ AMOLED, FullHD 1080x1920, 60 Hz, up to 500 nits"],
+      ["Touch", "On-cell capacitive multitouch, up to 5 points"],
+      ["Keyboard", "Physical QWERTY BBQ20 keyboard with integrated trackpad"],
+      ["Storage", "M.2 NVMe 2230 / 2242 + microSD (CM5 Lite configuration)"],
+      ["Battery", "5000 mAh LiPo recommended; battery not included"],
+      ["USB", "USB 3 Type-C, USB 3 Type-A, USB 2 Type-A, external USB-C"],
+      ["Video", "Full-size HDMI + Micro HDMI"],
+      ["Audio", "3.5 mm audio, stereo speakers, USB audio"],
+      [
+        "Expansion",
+        "GPIO / I²C, camera connector, auxiliary RP2040 controller"
+      ],
+      ["Size", "Approx. 80 × 145 × 25 mm assembled"],
+      ["PCB", "Approx. 75 × 140 mm mainboard"],
+      [
+        "Model status",
+        "Early Access"
+      ]
+    ],
+    "buy": {
+      "preorder": {
+        "title": "Preorder",
+        "price": "Reserve & Customize",
+        "note": "Secure your spot in the next batch and customize your piBrick parts to suit your needs.",
+        "url": "https://order.pibrick.net/",
+        "icon": "event_available",
+        "opentitle": "Reserve now"
+      },
+      "build": {
+        "title": "View on OSHWLab",
+        "price": "Open Hardware",
+        "note": "Explore the piBrick Slide project, design files, and development updates on OSHWLab.",
+        "url": "https://oshwlab.com/amarullz/project_nosefmvw",
+        "icon": "precision_manufacturing",
+        "opentitle": "Explore project"
+      }
+    },
+    "gallery": [
+      {
+        "src": "assets/images/slide/01.jpg",
+        "alt": "piBrick Slide",
+        "label": "Slide"
+      },
+      {
+        "src": "assets/images/slide/02.jpg",
+        "alt": "piBrick Slide",
+        "label": "Slide"
+      },
+      {
+        "src": "assets/images/slide/03.jpg",
+        "alt": "piBrick Slide",
+        "label": "Slide"
+      },
+      {
+        "src": "assets/images/slide/04.jpg",
+        "alt": "piBrick Slide",
+        "label": "Slide"
+      }
+    ],
+    "videos": [
+      {
+        "title": "piBrick Slide Early Demo",
+        "description": "First full demo of piBrick Slide - no cut, no scripts.",
+        "url": "https://www.youtube.com/watch?v=RXc4D3vgI54",
+        "thumbnail": "https://img.youtube.com/vi/RXc4D3vgI54/maxresdefault.jpg"
+      },
+      {
+        "title": "Mechanism and Display Assembly",
+        "description": "Watch how piBrick Slide sliding mechanism works and how to assembly the display",
+        "url": "https://www.youtube.com/watch?v=f2wvaVPaCvk",
+        "thumbnail": "https://img.youtube.com/vi/f2wvaVPaCvk/maxresdefault.jpg"
+      }
+    ],
+    "faq": [
+      {
+        "question": "What is piBrick Slide?",
+        "answer": "piBrick Slide is an early-access sliding handheld computer project based on the piBrick PocketCM5 MainBoard."
+      },
+      {
+        "question": "Is piBrick Slide available to purchase?",
+        "answer": "On Preorder Site. It is currently presented as an early-access preorder only. Follow the OSHWLab project for development updates."
+      },
+      {
+        "question": "What is included in the piBrick package?",
+        "answer": "The package includes the piBrick Slide hardware components. Raspberry Pi CM5, battery, and NVMe SSD are not included."
+      },
+      {
+        "question": "Which Raspberry Pi Compute Module is supported?",
+        "answer": "piBrick PocketCM5 is designed for Raspberry Pi Compute Module 5."
+      },
+      {
+        "question": "Can I install an NVMe SSD?",
+        "answer": "Yes. The mainboard supports M.2 NVMe SSDs in 2230 and 2242 sizes."
+      },
+      {
+        "question": "Does it include a battery?",
+        "answer": "No. The battery is not included. A 5000 mAh LiPo battery is recommended."
+      },
+      {
+        "question": "Can I install my own operating system?",
+        "answer": "Yes. piBrick is based on Raspberry Pi CM5 and supports compatible Raspberry Pi operating systems."
+      },
+      {
+        "question": "Is piBrick Slide support Camera?",
+        "answer": "Functionally Yes, but currently no available way to place any camera as built-in feature"
+      }
+    ]
   }
 ]
