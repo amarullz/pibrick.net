@@ -216,6 +216,9 @@ loader.load(MODEL_URL,collada=>{
   for(const [name] of PARTS){const obj=targets[name];if(obj)basePositions[name]=obj.position.clone();}
   const list=document.querySelector('#partList');
   PARTS.forEach(([name])=>{
+    if (name=='Camera-Holder'){
+      return;
+    }
     const row=document.createElement('div');row.className='part';
     const input=document.createElement('input');input.type='checkbox';input.checked=true;input.id='part-'+name.replaceAll(/[^a-z0-9]/gi,'');
     const eye=document.createElement('span');eye.className='eye';eye.textContent='◉';
@@ -255,6 +258,10 @@ loader.load(MODEL_URL,collada=>{
       spring.scale.set(1, 1, 1);
 
       springPivot.add(spring);
+  }
+
+  if (targets['Camera-Holder']) {
+    targets['Camera-Holder'].visible = false;
   }
 
   applyExplode(0,0);
@@ -309,7 +316,11 @@ function applyExplode(amount, slideAmount){
   }
 }
 
-function updateCount(){const checks=[...document.querySelectorAll('#partList input')];const n=checks.filter(x=>x.checked).length;document.querySelector('#visibleCount').textContent=`${n} / ${checks.length} visible`;}
+function updateCount(){
+  const checks=[...document.querySelectorAll('#partList input')];
+  const n=checks.filter(x=>x.checked).length;
+  document.querySelector('#visibleCount').textContent=`${n} / ${checks.length} visible`;
+}
 const explodeInput=document.querySelector('#explode');
 explodeInput.addEventListener('input',e=>applyExplode(Number(e.target.value)));
 document.querySelector('#assembled').addEventListener('click',()=>applyExplode(0));
