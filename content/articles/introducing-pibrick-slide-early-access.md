@@ -39,7 +39,8 @@ If you're joining the early access phase, please be prepared to share your exper
 
 If you're interested in becoming an early tester or adopter, check out the piBrick Slide project on OSHWLab:
 
-**[Explore piBrick Slide on OSHWLab](https://oshwlab.com/amarullz/project_nosefmvw)**
+- **[Explore piBrick Slide on OSHWLab](https://oshwlab.com/amarullz/project_nosefmvw)**
+- **[Preorder Units Now](https://order.pibrick.net/)**
 
 You can follow the hardware development there and get in touch through the piBrick community.
 
