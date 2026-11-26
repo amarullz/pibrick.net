@@ -1,12 +1,21 @@
 [
   {
-    "id": "welcome-to-pibrick",
-    "title": "Welcome to piBrick",
-    "date": "2026-10-29",
+    "id": "introducing-pibrick-slide-early-access",
+    "title": "Introducing piBrick Slide — Early Access for Makers and Early Adopters",
+    "date": "2026-11-26",
     "category": "Announcement",
-    "excerpt": "Why piBrick exists, what is open, and where to start.",
-    "cover": "pibrick-photo-3.jpg",
-    "file": "welcome-to-pibrick"
+    "excerpt": "Meet piBrick Slide, a new sliding-form-factor handheld Linux computer built around the piBrick PocketCM5 MainBoard and featuring a 5.48-inch AMOLED display.",
+    "cover": "slide-intro.jpg",
+    "file": "introducing-pibrick-slide-early-access"
+  },
+  {
+    "id": "why-pibrick-isnt-crowdfunding",
+    "title": "Why piBrick Isn't Crowdfunding",
+    "date": "2026-11-26",
+    "category": "Behind the Scenes",
+    "excerpt": "From PocketCM5 to Slide, here's why piBrick is choosing smaller production batches, a DIY-first philosophy, and sustainable growth over crowdfunding.",
+    "cover": "nocrowdfunding.png",
+    "file": "why-pibrick-isnt-crowdfunding"
   },
   {
     "id": "pibrick-serial-shell",
@@ -16,5 +25,14 @@
     "excerpt": "A web-based serial console for accessing piBrick through its built-in USB serial path.",
     "cover": "pibrick-photo-2.jpg",
     "file": "pibrick-serial-shell"
+  },
+  {
+    "id": "welcome-to-pibrick",
+    "title": "Welcome to piBrick",
+    "date": "2026-10-29",
+    "category": "Announcement",
+    "excerpt": "Why piBrick exists, what is open, and where to start.",
+    "cover": "pibrick-photo-3.jpg",
+    "file": "welcome-to-pibrick"
   }
 ]

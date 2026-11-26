@@ -291,7 +291,7 @@ h1 em{
 }
 .model-grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 18px;
 }
 .model-card {
@@ -314,19 +314,24 @@ h1 em{
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
+  /* background: linear-gradient(
     90deg,
     #0d0d0d 0%,
     rgba(13, 13, 13, 0.75) 42%,
     rgba(13, 13, 13, 0.05) 100%
-  );
+  ); */
 }
 .model-card-image img {
   height: 100%;
   width: 64%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   opacity: 0.75;
+  transition: transform 0.2s ease;
+}
+.model-card:hover img{
+  opacity: 1;
+  transform: scale(1.02) translateY(-5px);
 }
 .model-card-content {
   position: relative;

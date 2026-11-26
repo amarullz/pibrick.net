@@ -6,7 +6,7 @@
     "status": "Available",
     "eyebrow": "Handheld Linux computer",
     "hero": "assets/images/pocketcm5-hero.png",
-    "cardImage": "assets/images/pibrick-photo-3.jpg",
+    "cardImage": "assets/images/pocketcm5/card.png",
     "summary": "A compact Raspberry Pi CM5 handheld with AMOLED display, physical QWERTY keyboard, NVMe storage and a maker-friendly expansion design.",
     "highlights": [
       "Raspberry Pi Compute Module 5",
@@ -127,7 +127,7 @@
     "status": "Early Access",
     "eyebrow": "Sliding handheld Linux computer",
     "hero": "assets/images/slide/slide-hero.png",
-    "cardImage": "assets/images/slide/slide-photo-1.jpg",
+    "cardImage": "assets/images/slide/slide-card.png",
     "summary": "A sliding-form-factor piBrick handheld built around the PocketCM5 MainBoard, featuring a 5.48-inch AMOLED display. Currently in early access.",
     "highlights": [
       "Based on the piBrick PocketCM5 MainBoard",
