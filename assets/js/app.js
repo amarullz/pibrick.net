@@ -450,7 +450,10 @@ function renderModel(data) {
             <h2>3D Viewer</h2>
           </div>
         </div>
-        <iframe src="./3d/${model.id}.html" title="3D view of ${esc(model.name)}" allowfullscreen style="width: 100%; height: 76vh;background:#000;border-radius:20px" frameborder="0"></iframe>
+        <iframe src="./3d/${model.id}.html" title="3D view of ${esc(model.name)}" 
+          allowfullscreen 
+          style="width: 100%; height: 76vh;background:#000;border-radius:28px;border:none; outline: 1px solid rgb(68, 40, 11);" frameborder="0"
+        ></iframe>
       </div>
     </section>
 
