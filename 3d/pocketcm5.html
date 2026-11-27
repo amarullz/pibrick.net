@@ -60,14 +60,15 @@ html, body {
 </section>
 <section id="controls" class="panel">
   <div class="control-row">
-    <label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="1"><span id="explodeValue">100%</span>
-    <button id="materialToggle" type="button" aria-pressed="true">Black Case</button>
+    <label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="0"><span id="explodeValue">100%</span>
+    <button class="percentButton" id="explodeToggle" type="button" aria-pressed="true">Explode</button>
   </div>
   <div class="control-row">
-    <button id="assembled" style="flex:1">Assembled</button>
-    <button id="exploded" class="primary" style="flex:1">Exploded</button>
-    <button id="home" title="Reset View">♻️</button>
+    <button class="percentButton" id="materialToggle" type="button" aria-pressed="true" style="flex:1">Black Case</button>
+    <button id="home" title="Reset View" style="flex:1">♻️ Reset</button>
+    <button id="captureButton" title="Save as PNG" style="flex:1">💾 Save</button>
     <button title="Toggle Shadows" id="shadowToggle" type="button" aria-pressed="true">🔦</button>
+    <button id="fullscreenButton" title="Toggle Fullscreen">⛶</button>
   </div>
 </section>
 <div id="hint">Drag to rotate · Scroll/pinch to zoom · Right-drag to pan</div>
@@ -220,11 +221,55 @@ function applyExplode(amount){
   }
   document.querySelector('#explode').value=amount;
   document.querySelector('#explodeValue').textContent=Math.round(amount*100)+'%';
+  if (amount>0.5){
+    if (explodeToggle.innerHTML=='Explode'){
+      explodeToggle.innerHTML='Assemble';
+    }
+  }
+  else{
+    if (explodeToggle.innerHTML=='Assemble'){
+      explodeToggle.innerHTML='Explode';
+    }
+  }
 }
 function updateCount(){const checks=[...document.querySelectorAll('#partList input')];const n=checks.filter(x=>x.checked).length;document.querySelector('#visibleCount').textContent=`${n} / ${checks.length} visible`;}
-document.querySelector('#explode').addEventListener('input',e=>applyExplode(Number(e.target.value)));
-document.querySelector('#assembled').addEventListener('click',()=>applyExplode(0));
-document.querySelector('#exploded').addEventListener('click',()=>applyExplode(1));
+
+const explodeInput=document.querySelector('#explode');
+explodeInput.addEventListener('input',e=>applyExplode(Number(e.target.value)));
+
+/* TOGGLE EXPLODE */
+let toggleAnimationFrame = null;
+const explodeToggle = document.querySelector('#explodeToggle');
+let currentToggleAmount = Number(explodeInput.value) || 0;
+explodeToggle.addEventListener('click', () => {
+    const explodeTarget = explodeToggle.innerHTML.trim() === 'Explode' ? 1 : 0;
+    if (toggleAnimationFrame !== null) {
+        cancelAnimationFrame(toggleAnimationFrame);
+    }
+    const startAmount = currentToggleAmount;
+    const startTime = performance.now();
+    const duration = 400;
+
+    function animate(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = Math.pow(progress, 5);
+        currentToggleAmount =
+            startAmount + (explodeTarget - startAmount) * eased;
+        explodeInput.value = currentToggleAmount;
+        applyExplode(currentToggleAmount);
+        if (progress < 1) {
+            toggleAnimationFrame = requestAnimationFrame(animate);
+        } else {
+            currentToggleAmount = explodeTarget;
+            explodeInput.value = explodeTarget;
+            toggleAnimationFrame = null;
+            applyExplode(explodeTarget);
+        }
+    }
+    toggleAnimationFrame = requestAnimationFrame(animate);
+});
+
+
 document.querySelector('#showAll').addEventListener('click',()=>{document.querySelectorAll('#partList input').forEach(x=>{if(!x.checked){x.checked=true;x.dispatchEvent(new Event('change'));}});});
 document.querySelector('#hideAll').addEventListener('click',()=>{document.querySelectorAll('#partList input').forEach(x=>{if(x.checked){x.checked=false;x.dispatchEvent(new Event('change'));}});});
 const partsPanel=document.querySelector('#parts');
@@ -366,6 +411,98 @@ function toggleMaterial(){
   setCaseMaterial('Fan-Enclosure',casingMaterial.toLowerCase());
 }
 materialToggle.addEventListener('click',toggleMaterial);
+
+
+/* NEW ADDS */
+function capturePNG() {
+    renderer.render(scene, camera);
+
+    const source = renderer.domElement;
+
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = source.width;
+    tempCanvas.height = source.height;
+
+    const ctx = tempCanvas.getContext('2d');
+    ctx.drawImage(source, 0, 0);
+
+    const width = source.width;
+    const height = source.height;
+
+    // Read rendered pixels
+    const pixels = ctx.getImageData(0, 0, width, height).data;
+
+    let minX = width, minY = height;
+    let maxX = 0, maxY = 0;
+
+    // Find visible pixels (ignore transparent pixels)
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const i = (y * width + x) * 4;
+            const alpha = pixels[i + 3];
+
+            if (alpha > 10) {
+                minX = Math.min(minX, x);
+                minY = Math.min(minY, y);
+                maxX = Math.max(maxX, x);
+                maxY = Math.max(maxY, y);
+            }
+        }
+    }
+
+    if (minX > maxX || minY > maxY) return;
+
+    // Add padding around the model (5%)
+    const padding = Math.round(Math.max(maxX - minX, maxY - minY) * 0.05);
+
+    minX = Math.max(0, minX - padding);
+    minY = Math.max(0, minY - padding);
+    maxX = Math.min(width, maxX + padding);
+    maxY = Math.min(height, maxY + padding);
+
+    const cropWidth = maxX - minX;
+    const cropHeight = maxY - minY;
+
+    // Crop into a new canvas
+    const output = document.createElement('canvas');
+    output.width = cropWidth;
+    output.height = cropHeight;
+
+    const outputCtx = output.getContext('2d');
+
+    outputCtx.drawImage(
+        source,
+        minX, minY, cropWidth, cropHeight,
+        0, 0, cropWidth, cropHeight
+    );
+
+    // Download PNG
+    const link = document.createElement('a');
+    link.download = 'pibrick-pocketcm5.png';
+    link.href = output.toDataURL('image/png');
+    link.click();
+}
+
+document.querySelector('#captureButton')
+    .addEventListener('click', capturePNG);
+
+const fullscreenButton = document.querySelector('#fullscreenButton');
+fullscreenButton.addEventListener('click', async () => {
+    try {
+        if (!document.fullscreenElement) {
+            await document.documentElement.requestFullscreen();
+        } else {
+            await document.exitFullscreen();
+        }
+    } catch (err) {
+        console.error('Fullscreen error:', err);
+    }
+});
+document.addEventListener('fullscreenchange', () => {
+    fullscreenButton.textContent =
+        document.fullscreenElement ? '🗖' : '⛶';
+});
+
 
 </script>
 </body>
