@@ -61,13 +61,13 @@ html, body {
 <section id="controls" class="panel">
   <div class="control-row">
     <label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step=".01" value="0"><span id="explodeValue">100%</span>
-    <button class="percentButton" id="explodeToggle" type="button" aria-pressed="true">Explode</button>
+    <button class="percentButton" id="explodeToggle" type="button">Explode</button>
   </div>
   <div class="control-row">
-    <button class="percentButton" id="materialToggle" type="button" aria-pressed="true" style="flex:1">Black Case</button>
+    <button class="percentButton" id="materialToggle" type="button" style="flex:1">Black Case</button>
     <button id="home" title="Reset View" style="flex:1">♻️ Reset</button>
-    <button id="captureButton" title="Save as PNG" style="flex:1">💾 Save</button>
-    <button title="Toggle Shadows" id="shadowToggle" type="button" aria-pressed="true">🔦</button>
+    <button id="captureButton" title="Save as PNG">💾</button>
+    <button title="Toggle Shadows" id="shadowToggle" type="button">🔦</button>
     <button id="fullscreenButton" title="Toggle Fullscreen">⛶</button>
   </div>
 </section>
@@ -500,7 +500,7 @@ fullscreenButton.addEventListener('click', async () => {
 });
 document.addEventListener('fullscreenchange', () => {
     fullscreenButton.textContent =
-        document.fullscreenElement ? '🗖' : '⛶';
+        document.fullscreenElement ? '⧉' : '⛶';
 });
 
 
